@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+@theme {
+    --color-saffira: #C3ECFE;
+}
