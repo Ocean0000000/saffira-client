@@ -42,7 +42,7 @@
 						type="submit"
 						class="w-32 cursor-pointer rounded border-none bg-cyan-400 px-4 py-2 text-slate-50"
 						onclick={() => signInWithEmail(email, password)}
-						disabled={!email && !password}
+						disabled={!email || !password}
 					>
 						Login
 					</button>
