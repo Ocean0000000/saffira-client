@@ -9,7 +9,9 @@ export default defineConfig({
 		sveltekit(),
 		Icons({
 			compiler: 'svelte',
-			autoInstall: true,
 		})
-	]
+	],
+	optimizeDeps: {
+		include: ['@iconify-json/logos', 'aws-amplify'],
+	}
 });
