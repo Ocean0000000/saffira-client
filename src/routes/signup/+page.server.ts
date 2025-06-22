@@ -1,6 +1,7 @@
-import { signUpWithEmail } from '$lib/auth';
 import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
+import { signUpWithEmail } from '$lib/auth';
+import { validateCredentials } from '$lib/utils';
 
 export const actions: Actions = {
 	default: async ({ request, cookies }) => {
@@ -8,22 +9,15 @@ export const actions: Actions = {
 		const firstName = formData.get('firstName') as string;
 		const lastName = formData.get('lastName') as string;
 		const email = formData.get('email') as string;
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		const password = formData.get('password') as string;
 
-		if (!emailRegex.test(email)) {
-			return { error: 'Invalid email address format.' };
-		} else if (
-			password.length < 8 ||
-			!/[A-Z]/.test(password) ||
-			!/[a-z]/.test(password) ||
-			!/\d/.test(password)
-		) {
-			fail(400, {
-				error:
-					'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.'
+		if (!firstName || !lastName) {
+			return fail(400, {
+				error: 'First name and last name are required.'
 			});
 		}
+
+		validateCredentials(email, password);
 
 		await signUpWithEmail(email, password, {
 			userAttributes: {
