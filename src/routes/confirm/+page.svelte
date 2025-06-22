@@ -6,7 +6,7 @@
 	let { data, form }: PageProps = $props();
 	let code: string[] = $state(['', '', '', '', '', '']);
 	let inputRefs: HTMLInputElement[] = $state([]);
-    let email: string = $state('');
+    let email: string = $state(data.email);
 
 	const handleCodeInput = (index: number) => {
 		if (index < code.length - 1 && code[index].length === 1) {

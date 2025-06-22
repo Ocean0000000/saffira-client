@@ -3,6 +3,7 @@
 	import GoogleLogo from 'virtual:icons/logos/google-icon';
 	import MicrosoftLogo from 'virtual:icons/logos/microsoft-icon';
 	import { signInWithEmail, signInWithGoogle, signInWithMicrosoft } from '$lib/auth';
+	import { enhance } from '$app/forms';
 
 	let email = $state('');
 	let password = $state('');
@@ -13,12 +14,13 @@
 <section class="bg-saffira flex min-h-screen items-center justify-center">
 	<section class="flex flex-col items-center justify-center gap-4">
 		<img class="logo" src="/logo.png" alt="logo" width={480} />
-		<form class="flex w-full flex-col items-center justify-center">
+		<form method="POST" class="flex w-full flex-col items-center justify-center" use:enhance>
 			<fieldset class="flex w-full flex-col gap-4 border-none">
 				<input
 					class="h-10 w-full rounded-lg border-none bg-slate-50 px-4 text-sm placeholder-neutral-700 focus:outline-none"
 					type="text"
 					id="email"
+					name="email"
 					placeholder="Email"
 					autocomplete="email"
 					bind:value={email}
@@ -27,6 +29,7 @@
 					class="h-10 w-full rounded-lg border-none bg-slate-50 px-4 text-sm placeholder-neutral-700 focus:outline-none"
 					type="password"
 					id="password"
+					name="password"
 					placeholder="Password"
 					autocomplete="current-password"
 					bind:value={password}

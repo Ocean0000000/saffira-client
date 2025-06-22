@@ -2,6 +2,16 @@ import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { confirmSignUpWithEmail } from '$lib/auth';
 
+export const load = (async ({ cookies }) => {
+	const email = cookies.get('pending_email');
+
+	if (!email) {
+		throw redirect(303, '/login');
+	}
+
+	return { email };
+}) satisfies PageServerLoad;
+
 export const actions = {
 	default: async ({ request, cookies }) => {
 		const formData: FormData = await request.formData();
@@ -28,10 +38,15 @@ export const actions = {
 		const code: string = digits.join('');
 
 		await confirmSignUpWithEmail(email, code);
+
+		cookies.delete('pending_email', {
+			path: '/',
+			maxAge: 60 * 60 * 24,
+			httpOnly: true,
+			secure: true,
+			sameSite: 'strict'
+		});
+
 		throw redirect(303, '/classes');
 	}
 } satisfies Actions;
-
-export const load = (async () => {
-	return {};
-}) satisfies PageServerLoad;
