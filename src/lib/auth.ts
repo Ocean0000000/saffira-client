@@ -1,5 +1,13 @@
 import { Amplify } from 'aws-amplify';
-import { signUp, confirmSignUp, resendSignUpCode, signIn, signInWithRedirect, signOut } from 'aws-amplify/auth';
+import {
+	signUp,
+	confirmSignUp,
+	resendSignUpCode,
+	signIn,
+	signInWithRedirect,
+	signOut,
+	getCurrentUser
+} from 'aws-amplify/auth';
 
 export function configureAuth() {
 	try {
@@ -12,8 +20,8 @@ export function configureAuth() {
 						oauth: {
 							domain: import.meta.env.VITE_COGNITO_DOMAIN,
 							scopes: ['email', 'openid', 'profile'],
-							redirectSignIn: import.meta.env.VITE_COGNITO_REDIRECT_SIGN_IN,
-							redirectSignOut: import.meta.env.VITE_COGNITO_REDIRECT_SIGN_OUT,
+							redirectSignIn: [import.meta.env.VITE_DEPLOYMENT_URL + '/callback'],
+							redirectSignOut: [import.meta.env.VITE_DEPLOYMENT_URL + '/login'],
 							responseType: 'code'
 						}
 					},
@@ -22,17 +30,21 @@ export function configureAuth() {
 						email: {
 							required: true
 						}
-					}
+					},
 				}
 			}
-		});
+		}, { ssr: true});
 	} catch (error) {
 		console.error('Error configuring Amplify Auth:', error);
 		throw error;
 	}
 }
 
-export async function signUpWithEmail(email: string, password: string, options?: { userAttributes?: Record<string, string>}) {
+export async function signUpWithEmail(
+	email: string,
+	password: string,
+	options?: { userAttributes?: Record<string, string> }
+) {
 	try {
 		await signUp({
 			username: email,
@@ -63,7 +75,7 @@ export async function confirmSignUpWithEmail(email: string, code: string) {
 }
 
 export async function resendConfirmationCode(email: string) {
-  return resendSignUpCode({ username: email });
+	return resendSignUpCode({ username: email });
 }
 
 export async function signInWithEmail(email: string, password: string) {
@@ -78,22 +90,28 @@ export async function signInWithEmail(email: string, password: string) {
 	}
 }
 
-export async function signInWithGoogle() {
-  try {
-    return await signInWithRedirect({ provider: 'Google' });
-  } catch (error) {
-    console.error('Google sign-in error:', error);
-    throw error;
-  }
+export async function signInWithGoogle(redirectTo?: string) {
+	try {
+		return await signInWithRedirect({ 
+			provider: 'Google',
+			customState: redirectTo 
+		});
+	} catch (error) {
+		console.error('Google sign-in error:', error);
+		throw error;
+	}
 }
 
-export async function signInWithMicrosoft() {
-  try {
-    return await signInWithRedirect({ provider: { custom: 'Microsoft' } });
-  } catch (error) {
-    console.error('Microsoft sign-in error:', error);
-    throw error;
-  }
+export async function signInWithMicrosoft(redirectTo?: string) {
+	try {
+		return await signInWithRedirect({ 
+			provider: { custom: 'Microsoft' },
+			customState: redirectTo 
+		});
+	} catch (error) {
+		console.error('Microsoft sign-in error:', error);
+		throw error;
+	}
 }
 
 export async function logout() {
@@ -101,6 +119,15 @@ export async function logout() {
 		await signOut();
 	} catch (error) {
 		console.error('Error signing out:', error);
+		throw error;
+	}
+}
+
+export async function getCurrentAuthenticatedUser() {
+	try {
+		return await getCurrentUser();
+	} catch (error) {
+		console.error('Error getting current authenticated user:', error);
 		throw error;
 	}
 }

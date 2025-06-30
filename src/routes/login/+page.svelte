@@ -2,13 +2,31 @@
 	import type { PageProps } from './$types';
 	import GoogleLogo from 'virtual:icons/logos/google-icon';
 	import MicrosoftLogo from 'virtual:icons/logos/microsoft-icon';
-	import { signInWithEmail, signInWithGoogle, signInWithMicrosoft } from '$lib/auth';
+	import { logout, signInWithEmail, signInWithGoogle, signInWithMicrosoft } from '$lib/auth';
 	import { enhance } from '$app/forms';
+	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
 
 	let email = $state('');
 	let password = $state('');
 
 	let { data }: PageProps = $props();
+
+	const handleSignInWithGoogle = () => {
+		const redirectTo = page.url.searchParams.get('redirectTo') || '/classes';
+		if (data.user) {
+			goto(redirectTo, { replaceState: true});
+		}
+		signInWithGoogle(redirectTo);
+	};
+
+	const handleSignInWithMicrosoft = () => {
+		const redirectTo = page.url.searchParams.get('redirectTo') || '/classes';
+		if (data.user) {
+			goto(redirectTo, { replaceState: true});
+		}
+		signInWithMicrosoft(redirectTo);
+	};
 </script>
 
 <section class="bg-saffira flex min-h-screen items-center justify-center">
@@ -56,14 +74,14 @@
 		<section class="flex w-full justify-around gap-4">
 			<button
 				class="flex h-10 flex-1 cursor-pointer items-center justify-center gap-2 rounded border-none bg-slate-50 text-neutral-700"
-				onclick={signInWithGoogle}
+				onclick={handleSignInWithGoogle}
 			>
 				<GoogleLogo class="text-lg" />
 				Sign in with Google
 			</button>
 			<button
 				class="flex h-10 flex-1 cursor-pointer items-center justify-center gap-2 rounded border-none bg-slate-50 text-neutral-700"
-				onclick={signInWithMicrosoft}
+				onclick={handleSignInWithMicrosoft}
 			>
 				<MicrosoftLogo class="text-lg" />
 				Sign in with Microsoft
