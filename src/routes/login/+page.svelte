@@ -1,14 +1,19 @@
 <script lang="ts">
-	import type { PageProps } from './$types';
 	import GoogleLogo from 'virtual:icons/logos/google-icon';
 	import MicrosoftLogo from 'virtual:icons/logos/microsoft-icon';
 	import { signInWithEmail, signInWithGoogle, signInWithMicrosoft } from '$lib/auth';
 	import { enhance } from '$app/forms';
+	import type { PageProps } from './$types';
+	import { goto } from '$app/navigation';
+
+	let { form }: PageProps = $props();
 
 	let email = $state('');
 	let password = $state('');
 
-	let { data }: PageProps = $props();
+	if (form?.success) {
+		goto('/classes');
+	}
 </script>
 
 <section class="bg-saffira flex min-h-screen items-center justify-center">

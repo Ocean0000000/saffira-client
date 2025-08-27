@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
 @theme {
-    --color-saffira: #C3ECFE;
-    --color-saffira-disabled: #B0C4D9;
+	--color-saffira: #c3ecfe;
+	--color-saffira-disabled: #b0c4d9;
 }
