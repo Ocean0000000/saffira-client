@@ -1,20 +1,11 @@
+# Saffira.ai
+This is a proof of concept for an EdTech web application that predicts and visualizes student mastery of K-12 standards.
+
+## Environment Variables
+- VITE_COGNITO_USER_POOL_ID and VITE_COGNITO_USER_POOL_CLIENT_ID: Get this from deploying the Cognito Stack in the saffira-cdk repository
+- VITE_COGNITO_DOMAIN: applicationName.auth.aws-region.amazoncognito.com
+- VITE_DEPLOYMENT_URL: either localhost:port or custom domain
+
 ## Development
-
-Once you've created a project and installed dependencies with `npm install`, start a development server:
-
-```bash
-npm start
-
-# or start the server and open the app in a new browser tab
-npm start -- --open
-```
-
-## Production
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
+- pnpm install
+- pnpm start

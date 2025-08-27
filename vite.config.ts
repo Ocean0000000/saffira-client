@@ -5,13 +5,13 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [
-		tailwindcss(), 
+		tailwindcss(),
 		sveltekit(),
 		Icons({
-			compiler: 'svelte',
+			compiler: 'svelte'
 		})
 	],
 	optimizeDeps: {
-		include: ['@iconify-json/logos', 'aws-amplify'],
+		include: ['@iconify-json/logos', 'aws-amplify']
 	}
 });
