@@ -6,14 +6,28 @@
 	import type { PageProps } from './$types';
 	import { goto } from '$app/navigation';
 
-	let { form }: PageProps = $props();
+	let { data }: PageProps = $props();
 
 	let email = $state('');
 	let password = $state('');
+	let error = $state(false);
 
-	if (form?.success) {
-		goto('/classes');
-	}
+	const handleLoginWithEmail = async () => {
+		try {
+			const signInResult = await signInWithEmail(email, password);
+			if (signInResult.isSignedIn) {
+				goto('/classes');
+			}
+		} catch (e) {
+			error = true;
+		}
+	};
+
+	$effect(() => {
+		if (error && (email || password)) {
+			error = false;
+		}
+	});
 </script>
 
 <section class="bg-saffira flex min-h-screen items-center justify-center">
@@ -49,12 +63,15 @@
 					<button
 						type="submit"
 						class="w-32 cursor-pointer rounded border-none bg-cyan-400 px-4 py-2 text-slate-50"
-						onclick={() => signInWithEmail(email, password)}
+						onclick={handleLoginWithEmail}
 						disabled={!email || !password}
 					>
 						Login
 					</button>
 				</div>
+				{#if error}
+					<p class="text-sm text-red-600">Invalid email or password.</p>
+				{/if}
 			</fieldset>
 		</form>
 		<div class="my-4 w-full rounded-full border-t-2 border-neutral-700/20"></div>
