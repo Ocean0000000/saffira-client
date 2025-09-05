@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
     import type { PageProps } from './$types';
-	import { confirmSignUpWithEmail, signInWithEmail } from '$lib/auth';
+	import { confirmSignUpWithEmail } from '$lib/auth';
 	import { goto } from '$app/navigation';
 
     let { data }: PageProps = $props();
@@ -16,9 +16,9 @@
         const confirmSignUp = await confirmSignUpWithEmail(username, code);
 
         if (confirmSignUp.isSignUpComplete) {
-            goto('/callback');
-        } else {
             goto('/login');
+        } else {
+            goto('/callback');
         }
     })
 </script>
